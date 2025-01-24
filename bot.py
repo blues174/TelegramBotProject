@@ -12,16 +12,12 @@ dp.middleware.setup(LoggingMiddleware())
 
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    await bot.send_message(message.chat.id, "Привет! Я бот погоды.")
+    await bot.send_message(message.chat.id, "Привет! Я бот погоды, я составляю прогноз погоды для каждого региона РФ. Какой регион вас интересует?.")
 
 @dp.message_handler()
 async def echo(message: types.Message):
     print(message.text)
     user_message = message.text.lower()
-    if 'привет' in user_message:
-        await bot.send_message(message.chat.id, 'Привет!')
-    else:
-        await bot.send_message(message.chat.id, 'Извините, я не понимаю ваш вопрос.')
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
