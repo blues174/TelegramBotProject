@@ -8,5 +8,6 @@ Telegram-бот обращается к сайту с погодой, соста
 ## Стек технологий
 
 * [Python 3.7+](https://www.python.org/downloads/)
+* [requests 2.26.0](https://pypi.org/project/requests/)
 
 ## Как запустить проект
