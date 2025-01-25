@@ -9,10 +9,11 @@ Telegram-бот обращается к сайту с погодой, соста
 
 * [Python 3.7+](https://www.python.org/downloads/)
 * [requests 2.26.0](https://pypi.org/project/requests/)
-* pytelegrambotapi
+* [pytelegrambotapi](https://pypi.org/project/pyTelegramBotAPI/)
+* [emoji](https://pypi.org/project/emoji/)
 
 ## Как запустить проект
-1. Перед запуском убедитесь, что у вас есть установленный python версии >= 3.8
+1. Перед запуском убедитесь, что у вас есть установленный python версии >= 3.7
 2. Загрузите все используемые библиотеки командой: <br>
 `pip3 install requests pytelegrambotapi`
 3. Зайдите в @BotFather в телеграме и напишите /newbot, дайте имя и тэг вашему боту, после чего скопируйте полученный токен вашего
