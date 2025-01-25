@@ -15,8 +15,10 @@ Telegram-бот обращается к сайту с погодой, соста
 ## Как запустить проект
 1. Перед запуском убедитесь, что у вас есть установленный python версии >= 3.7
 2. Загрузите все используемые библиотеки командой: <br>
-`pip3 install requests pytelegrambotapi`
+`pip3 install requests pytelegrambotapi emoji`
 3. Зайдите в @BotFather в телеграме и напишите /newbot, дайте имя и тэг вашему боту, после чего скопируйте полученный токен вашего
 бота
-5. В bot.py в строчке API_TOKEN = '' добавьте свой токен
-6. Запустите файл bot.py
+5. В строчке `API_TOKEN = ''` добавьте свой токен
+6. В строчке `YANDEX_GEOCODER_API_TOKEN` добавьте свой токен [Yandex API](https://yandex.ru/maps-api/products/geocoder-api)
+7. В строчке `OPEN_WEATHER_API_TOKEN` добавьте свой токен [Open Weather API](https://openweathermap.org/forecast5)
+8. Запустите файл bot.py
