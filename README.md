@@ -18,7 +18,8 @@ Telegram-бот обращается к сайту с погодой, соста
 `pip3 install requests pytelegrambotapi emoji`
 3. Зайдите в @BotFather в телеграме и напишите /newbot, дайте имя и тэг вашему боту, после чего скопируйте полученный токен вашего
 бота
-5. В строчке `API_TOKEN = ''` добавьте свой токен
-6. В строчке `YANDEX_GEOCODER_API_TOKEN` добавьте свой токен [Yandex API](https://yandex.ru/maps-api/products/geocoder-api)
-7. В строчке `OPEN_WEATHER_API_TOKEN` добавьте свой токен [Open Weather API](https://openweathermap.org/forecast5)
-8. Запустите файл bot.py
+5. В строчке TELEGRAM_BOT_TOKEN добавьте свой токен
+7. В строчке OPENWEATHER_API_KEY добавьте свой токен [Open Weather API](https://openweathermap.org/forecast5)
+8. Запустите файл weather_bot.py
+9. Отправьте боту команду /start
+10. Чтобы получить погоду, отправьте /weather "название города", например /weather Ижевск.
