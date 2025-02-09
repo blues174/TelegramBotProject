@@ -70,17 +70,13 @@ def error(update, context):
 
 def main() -> None:
     """Run the bot."""
-    # Create the Application and pass it your bot's token.
     application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # Add command handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("weather", openweather_weather))
 
-    # Add error handler
     application.add_error_handler(error)
 
-    # Start the bot.
     application.run_polling()
 
 
