@@ -8,17 +8,17 @@ Telegram-бот обращается к сайту с погодой, соста
 ## Стек технологий
 
 * [Python 3.7+](https://www.python.org/downloads/)
+* [Python-dotenv](https://pypi.org/project/python-dotenv/)
 * [requests 2.26.0](https://pypi.org/project/requests/)
 * [pytelegrambotapi](https://pypi.org/project/pyTelegramBotAPI/)
 * [emoji](https://pypi.org/project/emoji/)
 
 ## Как запустить проект
 1. Перед запуском убедитесь, что у вас есть установленный python версии >= 3.7
-2. Загрузите все используемые библиотеки командой: <br>
-`pip3 install requests pytelegrambotapi emoji`
+2. Используя командную строку, загрузите все используемые библиотеки командой: pip install python-telegram-bot requests python-dotenv 
 3. Зайдите в @BotFather в телеграме и напишите /newbot, дайте имя и тэг вашему боту, после чего скопируйте полученный токен вашего
 бота
-5. В строчке TELEGRAM_BOT_TOKEN добавьте свой токен
+5. В строчке BOT_TOKEN добавьте свой токен
 7. В строчке OPENWEATHER_API_KEY добавьте свой токен [Open Weather API](https://openweathermap.org/forecast5)
 8. Запустите файл weather_bot.py
 9. Отправьте боту команду /start
