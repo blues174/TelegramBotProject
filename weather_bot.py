@@ -1,5 +1,6 @@
 import telegram
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import requests
 import json
 import os
@@ -8,8 +9,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
+BOT_TOKEN="ВАШ ТОКЕН"
+OPENWEATHER_API_KEY="ВАШ ТОКЕН"
 
 
 def get_weather_openweather(city_name):
@@ -43,39 +44,44 @@ def get_weather_openweather(city_name):
         return f"Ошибка при запросе к OpenWeatherMap: {e}"
 
 
-def start(update, context):
-    update.message.reply_text(
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Обработчик команды /start."""
+    await update.message.reply_text(
         "Привет! Я бот, который показывает погоду. Используй команду /weather [город] для запроса погоды."
     )
 
 
-
-def openweather_weather(update, context):
+async def openweather_weather(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Обработчик команды /weather."""
     if not context.args:
-        update.message.reply_text(
+        await update.message.reply_text(
             "Пожалуйста, укажите город, для которого вы хотите узнать погоду. Пример: /weather Москва"
         )
         return
 
     city_name = " ".join(context.args)
-    weather_info = get_weather_openweather(city_name)
-    update.message.reply_text(weather_info, parse_mode=telegram.ParseMode.HTML)
+    weather_info = await get_weather_openweather(city_name)
+    await update.message.reply_text(weather_info, parse_mode=telegram.ParseMode.HTML)
 
 
 def error(update, context):
     print(f"Update {update} caused error {context.error}")
 
 
-def main():
-    updater = Updater(TOKEN, use_context=True)
-    dp = updater.dispatcher
+def main() -> None:
+    """Run the bot."""
+    # Create the Application and pass it your bot's token.
+    application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("weather", openweather_weather))
-    dp.add_error_handler(error)
+    # Add command handlers
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("weather", openweather_weather))
 
-    updater.start_polling()
-    updater.idle()
+    # Add error handler
+    application.add_error_handler(error)
+
+    # Start the bot.
+    application.run_polling()
 
 
 if __name__ == "__main__":
