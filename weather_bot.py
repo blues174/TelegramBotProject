@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN="ВАШ_ТОКЕН"
-OPENWEATHER_API_KEY="ВАШ_ТОКЕН"
+BOT_TOKEN="7846747880:AAHg1aRxkPrJAD0g0I-DcZ5wZogvVfzw2Nk"
+OPENWEATHER_API_KEY="d596221b0fdd36984e64fdb65640210b"
 
 async def get_weather_openweather(city_name: str) -> str:
     """Получает погоду от OpenWeatherMap по названию города асинхронно."""
@@ -30,26 +30,26 @@ async def get_weather_openweather(city_name: str) -> str:
                     wind_speed = data.get("wind", {}).get("speed")
                     humidity = main.get("humidity")
                     return f"""
-                    <b>Погода от OpenWeatherMap:</b>
-                    Город: {city_name}
-                    Состояние: {condition}
-                    Температура: {temp}°C
-                    Ощущается как: {feels_like}°C
-                    Скорость ветра: {wind_speed} м/с
-                    Влажность: {humidity}%
+<b>Погода от OpenWeatherMap:</b>
+🏙Город: {city_name}
+☁Состояние: {condition}
+❄Температура: {temp}°
+🌧Ощущается как: {feels_like}°C
+🌬Скорость ветра: {wind_speed} м/с
+💦Влажность: {humidity}%
                     """
                 elif data and data.get("message"):
                     return f"Ошибка: {data['message']}"
                 else:
-                    return "Не удалось получить данные от OpenWeatherMap"
+                    return "⚠Не удалось получить данные от OpenWeatherMap"
     except aiohttp.ClientError as e:
-        return f"Ошибка при запросе к OpenWeatherMap: {e}"
+        return f"⚠Извините, я не знаю такого города, возможно вы написали его название с ошибкой. Попробуйте ещё раз."
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Обработчик команды /start."""
     await update.message.reply_text(
-        "Привет! Я бот, который показывает погоду. Используй команду /weather [город] для запроса погоды."
+        "👋Привет! Я бот, который показывает погоду. Используй команду /weather [город] для запроса погоды."
     )
 
 
