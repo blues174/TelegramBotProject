@@ -1,12 +1,11 @@
 import telegram
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 from telegram.constants import ParseMode
 import aiohttp
 import json
 import os
 from dotenv import load_dotenv
-
 
 load_dotenv()
 
@@ -14,7 +13,6 @@ BOT_TOKEN="7846747880:AAHg1aRxkPrJAD0g0I-DcZ5wZogvVfzw2Nk"
 OPENWEATHER_API_KEY="d596221b0fdd36984e64fdb65640210b"
 
 async def get_weather_openweather(city_name: str) -> str:
-    """Получает погоду от OpenWeatherMap по названию города асинхронно."""
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={OPENWEATHER_API_KEY}&units=metric&lang=ru"
     try:
         async with aiohttp.ClientSession() as session:
@@ -39,45 +37,56 @@ async def get_weather_openweather(city_name: str) -> str:
 💦Влажность: {humidity}%
                     """
                 elif data and data.get("message"):
-                    return f"Ошибка: {data['message']}"
+                    return f"❌ Ошибка: {data['message']}"
                 else:
-                    return "⚠Не удалось получить данные от OpenWeatherMap"
+                    return "⚠ Не удалось получить данные от OpenWeatherMap"
     except aiohttp.ClientError as e:
-        return f"⚠Извините, я не знаю такого города, возможно вы написали его название с ошибкой. Попробуйте ещё раз."
+        return f"⚠ Извините, я не знаю такого города, возможно вы написали его название с ошибкой. Попробуйте ещё раз."
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Обработчик команды /start."""
+    keyboard = [
+        [KeyboardButton("Старт 🚀"), KeyboardButton("Погода ☀️")],
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await update.message.reply_text(
-        "👋Привет! Я бот, который показывает погоду. Используй команду /weather [город] для запроса погоды."
+        "👋Привет! Я бот, который показывает погоду. Нажмите на кнопку Погода ☀️, чтобы узнать погоду в городе.",
+        reply_markup=reply_markup
     )
 
 
 async def openweather_weather(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Обработчик команды /weather."""
-    if not context.args:
-        await update.message.reply_text(
-            "Пожалуйста, укажите город, для которого вы хотите узнать погоду. Пример: /weather Москва"
-        )
-        return
+    await update.message.reply_text("🌍 Введите название города:")
+    context.user_data['waiting_for_city'] = True
 
-    city_name = " ".join(context.args)
-    weather_info = await get_weather_openweather(city_name)
-    await update.message.reply_text(weather_info, parse_mode=ParseMode.HTML)
+
+async def get_city_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if context.user_data.get('waiting_for_city'):
+        city_name = update.message.text
+        weather_info = await get_weather_openweather(city_name)
+        await update.message.reply_text(weather_info, parse_mode=ParseMode.HTML)
+        context.user_data['waiting_for_city'] = False
+    else:
+        await update.message.reply_text("Пожалуйста, сначала нажмите Погода ☀️.")
 
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Логирует ошибки, вызванные обновлениями."""
     print(f"Update {update} caused error {context.error}")
 
+async def handle_start_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    context.user_data['waiting_for_city'] = False
+    await start(update, context)
+
+async def handle_weather_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await openweather_weather(update, context)
 
 def main() -> None:
-    """Run the bot."""
     application = ApplicationBuilder().token(BOT_TOKEN).build()
 
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("weather", openweather_weather))
-
+    application.add_handler(MessageHandler(filters.TEXT & filters.Regex("^Старт 🚀$"), handle_start_button))
+    application.add_handler(MessageHandler(filters.TEXT & filters.Regex("^Погода ☀️$"), handle_weather_button))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, get_city_name))
     application.add_error_handler(error)
 
     application.run_polling()
